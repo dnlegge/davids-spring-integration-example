@@ -19,30 +19,32 @@ public class HelloServiceIntegrationTest {
 
     private static Logger logger = Logger.getLogger(HelloServiceIntegrationTest.class);
     @Resource
-    MessageChannel inputChannel;
+    MessageChannel inputChannelLow;
+    @Resource
+    MessageChannel inputChannelHigh;
     @Resource
     PollableChannel outputChannel;
 
     @Test
     public void testSayHello() throws Exception {
 
-        for (int i = 0;  i < 20 ; ++i) {
-            final GenericMessage<String> message1 = new GenericMessage<String>("World");
-            inputChannel.send(message1);
+        for (int i = 0;  i < 10 ; ++i) {
+            inputChannelLow.send(new GenericMessage<String>("World"));
+            inputChannelHigh.send(new GenericMessage<String>("World"));
         }
 
         final ArrayList<Message> messages = new ArrayList<Message>();
         Message<?> receive = null;
-        do {
-            receive = outputChannel.receive(5000);
+        while (true) {
+            receive = outputChannel.receive(1000);
 
             if (receive == null) {
                 break;
             }
             System.out.println(receive.getPayload());
-            logger.info(receive.getPayload());
+            logger.info(receive.getPayload() + " " + String.valueOf(receive.getHeaders().get("priority")));
             messages.add(receive);
-        } while (true);//(receive != null);
+        }
 
         System.out.println(messages.size());
         logger.info(messages.size());

@@ -7,12 +7,27 @@
 			http://www.springframework.org/schema/integration
 			http://www.springframework.org/schema/integration/spring-integration.xsd">
 
-    <poller default="true" fixed-rate="100">
-    </poller>
+    <poller default="true" fixed-rate="100" />
 
-	<channel id="inputChannel" >
+    <channel id="inputChannelHigh" >
         <queue capacity="10"/>
     </channel>
+
+    <header-enricher id="setHigh" input-channel="inputChannelHigh" output-channel="inputChannel">
+       <priority value="10"/>
+    </header-enricher>
+
+    <channel id="inputChannelLow" >
+        <priority-queue capacity="10"/>
+    </channel>
+
+    <header-enricher id="setLow" input-channel="inputChannelLow" output-channel="inputChannel">
+       <priority value="1"/>
+   </header-enricher>
+
+	<channel id="inputChannel">
+        <priority-queue capacity="10"/>
+  </channel>
 
 	<channel id="outputChannel">
 		<queue capacity="10"/>
