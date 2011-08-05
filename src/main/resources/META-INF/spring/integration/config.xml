@@ -7,7 +7,12 @@
 			http://www.springframework.org/schema/integration
 			http://www.springframework.org/schema/integration/spring-integration.xsd">
 
-	<channel id="inputChannel"/>
+    <poller default="true" fixed-rate="100">
+    </poller>
+
+	<channel id="inputChannel" >
+        <queue capacity="10"/>
+    </channel>
 
 	<channel id="outputChannel">
 		<queue capacity="10"/>
