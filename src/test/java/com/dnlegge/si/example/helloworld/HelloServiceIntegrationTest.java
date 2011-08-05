@@ -13,6 +13,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 
+import static org.junit.Assert.assertEquals;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
 public class HelloServiceIntegrationTest {
@@ -36,18 +38,22 @@ public class HelloServiceIntegrationTest {
         final ArrayList<Message> messages = new ArrayList<Message>();
         Message<?> receive = null;
         while (true) {
-            receive = outputChannel.receive(1000);
+            receive = outputChannel.receive(10);
 
             if (receive == null) {
                 break;
             }
-            System.out.println(receive.getPayload());
-            logger.info(receive.getPayload() + " " + String.valueOf(receive.getHeaders().get("priority")));
+            final String message = receive.getPayload() + " " + String.valueOf(receive.getHeaders().get("priority"));
+            System.out.println(message);
+            logger.info(message);
             messages.add(receive);
         }
 
-        System.out.println(messages.size());
-        logger.info(messages.size());
+        final int size = messages.size();
+        final String message = "Number of messages recieved: " + size;
+        System.out.println(message);
+        logger.info(message);
+        assertEquals("Some messages lost", 20, size);
 
     }
 }

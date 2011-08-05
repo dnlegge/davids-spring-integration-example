@@ -27,17 +27,14 @@
 
 	<channel id="inputChannel">
         <priority-queue capacity="10"/>
-  </channel>
+    </channel>
 
-	<channel id="outputChannel">
-		<queue capacity="10"/>
-	</channel>
+    <service-activator input-channel="inputChannel" output-channel="outputChannel" ref="helloService" method="sayHello"/>
 
-	<service-activator input-channel="inputChannel"
-	                   output-channel="outputChannel"
-	                   ref="helloService"
-	                   method="sayHello"/>
+    <beans:bean id="helloService" class="com.dnlegge.si.example.helloworld.HelloService"/>
 
-	<beans:bean id="helloService" class="com.dnlegge.si.example.helloworld.HelloService"/>
+    <channel id="outputChannel">
+        <queue capacity="10"/>
+    </channel>
 
 </beans:beans>
