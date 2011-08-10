@@ -31,14 +31,14 @@ public class HelloServiceIntegrationTest {
     public void testSayHello() throws Exception {
 
         for (int i = 0;  i < 10 ; ++i) {
-            inputChannelLow.send(new GenericMessage<String>("World"));
-            inputChannelHigh.send(new GenericMessage<String>("World"));
+            inputChannelLow.send(new GenericMessage<String>("World 1"));
+            inputChannelHigh.send(new GenericMessage<String>("World 2"));
         }
 
         final ArrayList<Message> messages = new ArrayList<Message>();
         Message<?> receive = null;
         while (true) {
-            receive = outputChannel.receive(10);
+            receive = outputChannel.receive(100);
 
             if (receive == null) {
                 break;
@@ -50,7 +50,7 @@ public class HelloServiceIntegrationTest {
         }
 
         final int size = messages.size();
-        final String message = "Number of messages recieved: " + size;
+        final String message = "Number of messages received: " + size;
         System.out.println(message);
         logger.info(message);
         assertEquals("Some messages lost", 20, size);
