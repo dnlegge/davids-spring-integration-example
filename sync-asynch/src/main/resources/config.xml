@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:sftp="http://www.springframework.org/schema/integration/sftp"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-2.0.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/integration/sftp
+		http://www.springframework.org/schema/integration/sftp/spring-integration-sftp-2.0.xsd">
+
+
+    <int:channel id="channel1">
+        <int:queue capacity="1000"/>
+    </int:channel>
+    <int:publish-subscribe-channel id="channel2"/>
+
+    <int:bridge input-channel="channel1" output-channel="channel2" >
+        <poller max-messages-per-poll="16" fixed-rate="10000"/>
+    </int:bridge>
+
+    <sftp:outbound-channel-adapter channel="channel2"
+                                   session-factory="sftpSessionFactory"
+                                   remote-directory="${sftp.dir}"
+                                   temporary-file-suffix="uploading"/>
+
+    <int:service-activator input-channel="errorChannel"
+                       output-channel="nullChannel"
+                       ref="myServiceActivator"
+                       method="handleError"/>
+
+    <!-- Seems to be a mismatch etween the xsd and the actual classes -->
+    <bean id="sftpSessionFactory" class="org.springframework.integration.sftp.session.SftpSessionFactory"/>
+    <bean id="myServiceActivator" class="com.dnlegge.si.syncasync.MyServiceActivator"/>
+
+</beans>

@@ -5,13 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>davids-spring-integration-example</groupId>
-    <artifactId>davids-spring-integration-example-parent</artifactId>
+    <artifactId>priority-queue</artifactId>
     <packaging>pom</packaging>
     <version>1.0</version>
-    <modules>
-        <module>priority-queue</module>
-        <module>sync-asynch</module>
-    </modules>
 
     <dependencies>
         <dependency>
