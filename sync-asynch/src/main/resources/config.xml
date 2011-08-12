@@ -18,8 +18,9 @@
     </int:channel>
     <int:publish-subscribe-channel id="channel2"/>
 
+
     <int:bridge input-channel="channel1" output-channel="channel2" >
-        <poller max-messages-per-poll="16" fixed-rate="10000"/>
+        <int:poller default="true" max-messages-per-poll="16" fixed-rate="10000"/>
     </int:bridge>
 
     <sftp:outbound-channel-adapter channel="channel2"
@@ -34,6 +35,7 @@
 
     <!-- Seems to be a mismatch etween the xsd and the actual classes -->
     <bean id="sftpSessionFactory" class="org.springframework.integration.sftp.session.SftpSessionFactory"/>
+
     <bean id="myServiceActivator" class="com.dnlegge.si.syncasync.MyServiceActivator"/>
 
 </beans>
